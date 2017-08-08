@@ -12,6 +12,12 @@ namespace Lua
 		mNumber = number;
 	}
 
+	Value::Value(int number)
+	{
+		mType = Type::number;
+		mNumber = number;
+	}
+
 	Value::Value(bool boolean)
 	{
 		mType = Type::boolean;
@@ -47,6 +53,14 @@ namespace Lua
 		return mNumber;
 	}
 
+	Value::operator int() const
+	{
+		if (mType != Type::number)
+			throw std::exception("Can't convert value to double", (int)mType);
+
+		return mNumber;
+	}
+
 	Value::operator bool() const
 	{
 		if (mType != Type::boolean)
@@ -69,14 +83,21 @@ namespace Lua
 	}
 
 
-	Value& Value::operator=(const double& right)
+	Value& Value::operator=(double right)
 	{
 		mType = Type::number;
 		mNumber = right;
 		return *this;
 	}
 
-	Value& Value::operator=(const bool& right)
+	Value& Value::operator=(int right)
+	{
+		mType = Type::number;
+		mNumber = right;
+		return *this;
+	}
+
+	Value& Value::operator=(bool right)
 	{
 		mType = Type::boolean;
 		mBoolean = right;
@@ -96,7 +117,7 @@ namespace Lua
 		return *this;
 	}
 
-	Value& Value::operator=(const Type& right)
+	Value& Value::operator=(Type right)
 	{
 		mType = right;
 		return *this;
@@ -141,6 +162,7 @@ namespace Lua
 			mString = lua_tostring(L, idx);
 			break;
 		case LUA_TNIL:
+		case LUA_TNONE:
 			mType = Type::nil;
 			break;
 		case LUA_TFUNCTION:

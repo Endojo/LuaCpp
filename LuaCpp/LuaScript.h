@@ -50,11 +50,11 @@ namespace Lua
 				returnValues.push_back(Value(mState));
 			}
 		}
+		lua_State *mState;
 
 	private:
 		void _load();
 
-		lua_State *mState;
 		const std::string mScriptFileName;
 	};
 
