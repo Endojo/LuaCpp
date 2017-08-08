@@ -2,9 +2,16 @@
 #include <string>
 #include "LuaScript.h"
 #include "LuaFunction.h"
+#include "LuaLibrary.h"
 
-struct Foo
+struct Foo : public Lua::Library
 {
+	Foo() : Library("Foo", this, {
+		{ "bar", Lua::Function<Foo, &Foo::bar>}
+	})
+	{
+	}
+
 	float bar(std::string str)
 	{
 		std::cout << str << std::endl;
@@ -27,21 +34,7 @@ int main()
 	testscript("drucken", { "Dies ist ein Dummer Testtext!" });
 
 	Foo fo;
-
-	//inject the function into the script
-	luaL_Reg *functionList = new luaL_Reg[2];
-
-	//functionList[0] = { "bar", Lua::FunctionWrapper<Foo, float, std::string, &Foo::bar> };
-	functionList[0] = { "bar", Lua::Function<Foo, &Foo::bar> };
-	functionList[1] = { nullptr, nullptr };
-
-	//add library
-	lua_newtable(testscript.mState);
-	lua_pushlightuserdata(testscript.mState, &fo);
-	luaL_setfuncs(testscript.mState, functionList, 1);
-	lua_setglobal(testscript.mState, "Foo");
-
-	delete[] functionList;
+	testscript.addLibrary(fo);
 
 	testscript("test", { "Halli hallo!" });
 

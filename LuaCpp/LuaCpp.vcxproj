@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="LuaLibrary.cpp" />
     <ClCompile Include="LuaScript.cpp" />
     <ClCompile Include="LuaValue.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LuaFunction.h" />
+    <ClInclude Include="LuaLibrary.h" />
     <ClInclude Include="LuaScript.h" />
     <ClInclude Include="LuaValue.h" />
   </ItemGroup>
